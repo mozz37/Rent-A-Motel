@@ -1,5 +1,6 @@
 import bcryptjs from "bcryptjs"
 import prisma from "../db/prisma.js"
+import generateToken from "../utils/generateToken.js"
 
 export const signup = async (req, res) => {
     try {
@@ -40,10 +41,10 @@ export const signup = async (req, res) => {
                 email: newUser.email
 			})
 		} else {
-			console.log("Error in signup controller", error.message)
-		    res.status(500).json({ error: "Internal Server Error" })
+			res.status(400).json({ error: "Invalid user data" })
 		}
     } catch (error) {
-        console.log(error)
+        console.log("Error in signup controller", error.message)
+		res.status(500).json({ error: "Internal Server Error" })
     }
 }
