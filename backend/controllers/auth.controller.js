@@ -60,3 +60,28 @@ export const signup = async (req, res) => {
 		res.status(500).json({ error: "Internal Server Error" })
     }
 }
+
+export const login = async (req, res) => {
+	try {
+		const { email, password } = req.body
+
+		const user = await prisma.user.findUnique({ where: { email } })
+
+		const isPasswordCorrect = await bcryptjs.compare(password, user.password)
+
+		if(!user || !isPasswordCorrect) {
+			return res.status(400).json({ error: "Invalid email or password" })
+		}
+
+		generateToken(user.id, res)
+
+		res.status(200).json({
+			id: user.id,
+			fullName: user.fullName,
+			username: user.username
+		})
+	} catch (error) {
+		console.log("Error in login controller", error.message)
+		res.status(500).json({ error: "Internal Server Error" })
+	}
+}
