@@ -6,6 +6,12 @@ export const signup = async (req, res) => {
     try {
         const { username, fullName, email, password, confirmPassword } = req.body
 
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+		if(!emailRegex.test(email)) {
+			return res.status(400).json({ error: "Invalid email address" })
+		}
+
         if (!fullName || !username || !email || !password || !confirmPassword) {
 			return res.status(400).json({ error: "Please fill in all fields" })
 		}
@@ -14,10 +20,16 @@ export const signup = async (req, res) => {
 			return res.status(400).json({ error: "Passwords do not match" })
 		}
 
-        const user = await prisma.user.findUnique({ where: { username } })
+        const existingUser = await prisma.user.findUnique({ where: { username } })
 
-        if (user) {
+        if (existingUser) {
 			return res.status(400).json({ error: "User already exists" })
+		}
+
+		const existingEmail = await prisma.user.findUnique({ where: { email } })
+
+		if (existingEmail) {
+			return res.status(400).json({ error: "Email already exists" })
 		}
 
         const salt = await bcryptjs.genSalt(10)
