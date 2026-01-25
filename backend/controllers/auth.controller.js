@@ -4,7 +4,7 @@ import generateToken from "../utils/generateToken.js"
 
 export const signup = async (req, res) => {
     try {
-        const { username, fullName, email, password, confirmPassword } = req.body
+        const { username, fullName, email, password, confirmPassword, role } = req.body
 
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -12,7 +12,7 @@ export const signup = async (req, res) => {
 			return res.status(400).json({ error: "Invalid email address" })
 		}
 
-        if (!fullName || !username || !email || !password || !confirmPassword) {
+        if (!fullName || !username || !email || !password || !confirmPassword || !role) {
 			return res.status(400).json({ error: "Please fill in all fields" })
 		}
 
@@ -41,6 +41,7 @@ export const signup = async (req, res) => {
 				fullName,
                 email,
 				password: hashedPassword,
+				role
 			},
 		})
 
