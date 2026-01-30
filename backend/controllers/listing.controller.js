@@ -2,7 +2,7 @@ import prisma from "../db/prisma.js"
 
 export const createListing = async (req, res) => {
     try {
-        const { title, description, pricePerNight, beds, baths, maxGuests } = req.body
+        const { title, description, pricePerNight, beds, baths, maxGuests, propertyType } = req.body
 
         let hostId = req.user.id
 
@@ -35,7 +35,8 @@ export const createListing = async (req, res) => {
                 pricePerNight,
                 beds,
                 baths,
-                maxGuests
+                maxGuests,
+                propertyType
             }
         })
 
