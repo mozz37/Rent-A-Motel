@@ -21,6 +21,7 @@ model User {
   password String
   role Role
   listings Listing[]
+  bookings Booking[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
@@ -35,11 +36,43 @@ model Listing {
   beds Int
   baths Int
   maxGuests Int
+  propertyType PropertyType
+  bookings Booking[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model Booking {
+  id String @id @default(cuid())
+
+  guestId String
+  guest User @relation(fields: [guestId], references: [id])
+
+  listingId String
+  listing Listing @relation(fields: [listingId], references: [id])
+
+  checkIn DateTime
+  checkOut DateTime
+  totalPrice Int
+  guestCount Int
+  status Status
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {
   HOST
   GUEST
+}
+
+enum PropertyType {
+  HOUSE
+  APARTMENT
+}
+
+enum Status {
+  CONFIRMED
+  PENDING
+  CANCELLED
 }
